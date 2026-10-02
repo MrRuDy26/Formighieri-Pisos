@@ -26,7 +26,7 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora a direção exata da rolagem (para cima ou para baixo)
+  // Monitora a direção exata da rolagem (subindo ou descendo)
   useEffect(() => {
     let lastY = window.scrollY;
     const updateScrollDir = () => {
@@ -50,9 +50,12 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // Escala vertical baseada no scroll para desenhar o feixe de ponta a ponta
-  const beamScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const beamOpacity = useTransform(scrollYProgress, [0.01, 0.05, 0.95, 1], [0, 1, 1, 0]);
+  // Movimento simétrico do feixe: Desce de -100% a 100% (descendo) ou sobe de 100% a -100% (subindo)
+  const cometPosition = useTransform(
+    scrollYProgress, 
+    [0, 1], 
+    scrollDir === "down" ? ["-100%", "100%"] : ["100%", "-100%"]
+  );
 
   // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -90,15 +93,17 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe de Luz Laser Imponente cobrindo 100% da altura lateral */}
-        <motion.div 
-          style={{ 
-            scaleY: beamScaleY, 
-            opacity: beamOpacity,
-            transformOrigin: scrollDir === "down" ? "top" : "bottom"
-          }}
-          className="absolute top-0 right-0 w-[2px] h-full bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_20px_#ffd700]"
-        />
+        {/* Feixe Cometa com Movimento Direcional Simétrico (Desce e Sobe sumindo nas pontas) */}
+        <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5">
+          <motion.div 
+            style={{ y: cometPosition }}
+            className={`absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b ${
+              scrollDir === "down" 
+                ? "from-transparent via-[#ffd700] to-transparent" 
+                : "from-transparent via-[#ffd700] to-transparent"
+            } shadow-[0_0_20px_#ffd700]`}
+          />
+        </div>
 
         {/* Logo Reduzida */}
         <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2">
