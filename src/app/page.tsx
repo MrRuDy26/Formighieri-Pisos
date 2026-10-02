@@ -26,7 +26,7 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora a direção exata da rolagem (subindo ou descendo)
+  // Monitora a direção exata do scroll
   useEffect(() => {
     let lastY = window.scrollY;
     const updateScrollDir = () => {
@@ -42,22 +42,15 @@ export default function Home() {
     return () => window.removeEventListener("scroll", updateScrollDir);
   }, []);
 
-  // Monitora o progresso exato da rolagem da página (de 0 a 1)
   const { scrollYProgress } = useScroll();
   
-  // O menu aparece suavemente no início da rolagem
   const menuOpacity = useTransform(scrollYProgress, [0.03, 0.1], [0, 1]);
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // Movimento simétrico do feixe: Desce de -100% a 100% (descendo) ou sobe de 100% a -100% (subindo)
-  const cometPosition = useTransform(
-    scrollYProgress, 
-    [0, 1], 
-    scrollDir === "down" ? ["-100%", "100%"] : ["100%", "-100%"]
-  );
+  // Trajeto completo do cometa de ponta a ponta sem cortes
+  const cometY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
-  // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const yHeroText = useTransform(scrollYProgress, [0, 0.5], ["0%", "-50%"]);
   const opacityHero = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
@@ -93,15 +86,11 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe Cometa com Movimento Direcional Simétrico (Desce e Sobe sumindo nas pontas) */}
-        <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5">
+        {/* Feixe Cometa Absoluto (Começa no top-0 exato e percorre toda a lateral) */}
+        <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5 pointer-events-none">
           <motion.div 
-            style={{ y: cometPosition }}
-            className={`absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b ${
-              scrollDir === "down" 
-                ? "from-transparent via-[#ffd700] to-transparent" 
-                : "from-transparent via-[#ffd700] to-transparent"
-            } shadow-[0_0_20px_#ffd700]`}
+            style={{ y: cometY }}
+            className="absolute top-[-50%] left-0 w-full h-[50vh] bg-gradient-to-b from-transparent via-[#ffd700] to-transparent shadow-[0_0_20px_#ffd700]"
           />
         </div>
 
