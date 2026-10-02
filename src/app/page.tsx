@@ -25,17 +25,16 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora o progresso exato da rolagem de toda a página (de 0 a 1)
   const { scrollYProgress } = useScroll();
   
-  // O menu aparece suavemente no início da rolagem
+  // Menu lateral aparece suavemente
   const menuOpacity = useTransform(scrollYProgress, [0.03, 0.1], [0, 1]);
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // O feixe de luz laser agora percorre 100% da altura do site guiado pelo scroll
-  const beamHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const beamOpacity = useTransform(scrollYProgress, [0.02, 0.08], [0, 1]);
+  // Feixe laser que se desloca de ponta a ponta e some nas extremidades
+  const beamHeight = useTransform(scrollYProgress, [0.02, 0.95], ["0%", "100%"]);
+  const beamOpacity = useTransform(scrollYProgress, [0.02, 0.08, 0.9, 0.98], [0, 1, 1, 0]);
 
   // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -73,10 +72,10 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe de Luz Elástico amarrado de ponta a ponta do site */}
+        {/* Feixe laser guiado por scroll com efeito de brilho intenso */}
         <motion.div 
           style={{ height: beamHeight, opacity: beamOpacity }}
-          className="absolute top-0 right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_15px_#ffd700]"
+          className="absolute top-0 right-0 w-[3px] bg-gradient-to-b from-[#ffd700] via-[#ffdf00] to-[#ffd700] shadow-[0_0_20px_#ffd700,0_0_5px_#fff]"
         />
 
         {/* Logo Reduzida */}
@@ -155,7 +154,7 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* CATÁLOGO TIPOGRÁFICO COM REVEAL PROGRESSIVO */}
+        {/* CATÁLOGO TIPOGRÁFICO COM REVEAL PROGRESSIVO E IMAGEM GARANTIDA */}
         <section id="produtos" className="relative py-32 px-8 sm:px-16 max-w-[1400px] mx-auto min-h-screen">
           <div className="mb-24 border-b border-white/10 pb-8">
             <span className="text-[#ffd700] text-xs uppercase tracking-[0.4em] mb-4 block font-semibold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">Portfólio Completo</span>
@@ -183,13 +182,19 @@ export default function Home() {
                         {cat.items.map((item, i) => (
                           <motion.li 
                             key={i} 
-                            initial={{ opacity: 0, x: -10 }}
+                            initial={{ opacity: 0, x: -15 }}
                             whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.05 }}
+                            viewport={{ once: true, margin: "-20px" }}
+                            transition={{ duration: 0.5, delay: i * 0.08 }}
                             className="text-white/75 text-sm lg:text-base font-light tracking-wide hover:text-[#ffd700] hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)] transition-all duration-300 flex items-center gap-3 cursor-pointer"
                           >
-                            <span className="w-1.5 h-1.5 bg-[#ffd700] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_6px_#ffd700]" />
+                            <motion.span 
+                              initial={{ scale: 0, opacity: 0 }}
+                              whileInView={{ scale: 1, opacity: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.3, delay: i * 0.08 + 0.1 }}
+                              className="w-2 h-2 bg-[#ffd700] rounded-full shadow-[0_0_8px_#ffd700]" 
+                            />
                             {item}
                           </motion.li>
                         ))}
@@ -200,7 +205,7 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Imagem Fixa Garantida desde o carregamento */}
+            {/* Imagem Fixa Garantida desde o carregamento inicial */}
             <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[75vh] w-full rounded-sm overflow-hidden bg-[#110f0e] shadow-2xl border border-white/5">
               <AnimatePresence mode="wait">
                 <motion.div
