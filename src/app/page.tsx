@@ -26,7 +26,7 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora a direção do scroll (subindo ou descendo)
+  // Monitora a direção exata da rolagem (para cima ou para baixo)
   useEffect(() => {
     let lastY = window.scrollY;
     const updateScrollDir = () => {
@@ -50,9 +50,9 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // O Feixe Imponente: Cresce de ponta a ponta e some perfeitamente nas extremidades (início e fim)
-  const beamHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const beamOpacity = useTransform(scrollYProgress, [0.02, 0.1, 0.9, 0.98], [0, 1, 1, 0]);
+  // Escala vertical baseada no scroll para desenhar o feixe de ponta a ponta
+  const beamScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const beamOpacity = useTransform(scrollYProgress, [0.01, 0.05, 0.95, 1], [0, 1, 1, 0]);
 
   // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -90,14 +90,14 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe Imponente com origem dinâmica orientada pela direção do scroll */}
+        {/* Feixe de Luz Laser Imponente cobrindo 100% da altura lateral */}
         <motion.div 
           style={{ 
-            height: beamHeight, 
+            scaleY: beamScaleY, 
             opacity: beamOpacity,
             transformOrigin: scrollDir === "down" ? "top" : "bottom"
           }}
-          className="absolute right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_20px_#ffd700]"
+          className="absolute top-0 right-0 w-[2px] h-full bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_20px_#ffd700]"
         />
 
         {/* Logo Reduzida */}
