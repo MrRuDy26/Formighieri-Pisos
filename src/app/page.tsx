@@ -8,6 +8,7 @@ import Lenis from '@studio-freight/lenis';
 
 export default function Home() {
   const [hoveredCategory, setHoveredCategory] = useState(0);
+  const [scrollDir, setScrollDir] = useState<"down" | "up">("down");
 
   // Inicializa o Scroll Suave (Lenis)
   useEffect(() => {
@@ -25,6 +26,22 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
+  // Monitora a direção do scroll (subindo ou descendo)
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const updateScrollDir = () => {
+      const currentY = window.scrollY;
+      if (currentY > lastY + 2) {
+        setScrollDir("down");
+      } else if (currentY < lastY - 2) {
+        setScrollDir("up");
+      }
+      lastY = currentY > 0 ? currentY : 0;
+    };
+    window.addEventListener("scroll", updateScrollDir, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollDir);
+  }, []);
+
   // Monitora o progresso exato da rolagem da página (de 0 a 1)
   const { scrollYProgress } = useScroll();
   
@@ -33,8 +50,9 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // O Efeito Cometa: O gradiente se desloca linearmente de -100% a 100% acompanhando o scroll inteiro
-  const cometPosition = useTransform(scrollYProgress, [0, 1], ["-100%", "100%"]);
+  // O Feixe Imponente: Cresce de ponta a ponta e some perfeitamente nas extremidades (início e fim)
+  const beamHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const beamOpacity = useTransform(scrollYProgress, [0.02, 0.1, 0.9, 0.98], [0, 1, 1, 0]);
 
   // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -72,13 +90,15 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe Cometa de Luz Laser */}
-        <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5">
-          <motion.div 
-            style={{ y: cometPosition }}
-            className="absolute top-0 left-0 w-full h-[40vh] bg-gradient-to-b from-transparent via-[#ffd700] to-transparent shadow-[0_0_20px_#ffd700]"
-          />
-        </div>
+        {/* Feixe Imponente com origem dinâmica orientada pela direção do scroll */}
+        <motion.div 
+          style={{ 
+            height: beamHeight, 
+            opacity: beamOpacity,
+            transformOrigin: scrollDir === "down" ? "top" : "bottom"
+          }}
+          className="absolute right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_20px_#ffd700]"
+        />
 
         {/* Logo Reduzida */}
         <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2">
