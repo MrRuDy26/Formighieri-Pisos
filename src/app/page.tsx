@@ -26,7 +26,7 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora a direção exata do scroll
+  // Monitora a direção exata da rolagem (descendo ou subindo)
   useEffect(() => {
     let lastY = window.scrollY;
     const updateScrollDir = () => {
@@ -48,8 +48,9 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // Trajeto completo do cometa de ponta a ponta sem cortes
-  const cometY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  // O feixe cresce de 0% a 100% cobrindo toda a altura da barra lateral ao longo da página inteira
+  const beamScaleY = useTransform(scrollYProgress, [0, 0.95], [0, 1]);
+  const beamOpacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 0.98], [0, 1, 1, 0]);
 
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const yHeroText = useTransform(scrollYProgress, [0, 0.5], ["0%", "-50%"]);
@@ -86,11 +87,15 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe Cometa Absoluto (Começa no top-0 exato e percorre toda a lateral) */}
+        {/* Feixe de Luz Laser de Ponta a Ponta com Origem Dinâmica Baseada no Scroll */}
         <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5 pointer-events-none">
           <motion.div 
-            style={{ y: cometY }}
-            className="absolute top-[-50%] left-0 w-full h-[50vh] bg-gradient-to-b from-transparent via-[#ffd700] to-transparent shadow-[0_0_20px_#ffd700]"
+            style={{ 
+              scaleY: beamScaleY, 
+              opacity: beamOpacity,
+              transformOrigin: scrollDir === "down" ? "top" : "bottom"
+            }}
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_20px_#ffd700]"
           />
         </div>
 
