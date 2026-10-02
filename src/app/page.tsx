@@ -56,17 +56,17 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#cda661] selection:text-[#0c0a09]">
       
-      {/* NAVBAR COMPLETA */}
+    {/* NAVBAR COMPLETA E CORRIGIDA */}
       <motion.nav 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 w-full z-50 px-6 sm:px-12 py-6 flex items-center justify-between mix-blend-difference"
+        className="fixed top-0 left-0 w-full z-50 px-6 sm:px-12 py-5 flex items-center justify-between bg-[#0c0a09]/90 backdrop-blur-md border-b border-white/5"
       >
-        {/* LOGO OFICIAL APLICADA AQUI */}
-        <a href="#" className="relative block h-6 w-32 md:h-8 md:w-48">
+        {/* LOGO OFICIAL APLICADA AQUI - TAMANHO AUMENTADO */}
+        <a href="#" className="relative block h-12 w-48 md:h-16 md:w-64">
           <Image 
-            src="/logo.png" /* Mude para .svg se o seu arquivo for vetor */
+            src="/logo.png" /* Mude para .svg se for vetor */
             alt="Formighieri Pisos de Madeira"
             fill
             style={{ objectFit: "contain", objectPosition: "left" }}
@@ -93,7 +93,6 @@ export default function Home() {
           <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
         </a>
       </motion.nav>
-
       {/* HERO PARALLAX */}
       <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div 
