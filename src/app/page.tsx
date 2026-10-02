@@ -26,7 +26,7 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora a direção exata da rolagem
+  // Monitora a direção exata da rolagem (descendo ou subindo)
   useEffect(() => {
     let lastY = window.scrollY;
     const updateScrollDir = () => {
@@ -48,8 +48,11 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // Física pura: Se descendo, escala de 0 a 1 do topo. Se subindo, escala de 0 a 1 da base para cima.
-  const beamScaleY = useTransform(scrollYProgress, [0, 0.98], [0, 1]);
+  // Escala dinâmica: Se descendo, cresce de 0 a 1 do topo. Se subindo, cresce de 0 a 1 invertido (da base para cima).
+  const scaleDown = useTransform(scrollYProgress, [0, 0.98], [0, 1]);
+  const scaleUp = useTransform(scrollYProgress, [0.02, 1], [1, 0]);
+  
+  const beamScaleY = scrollDir === "down" ? scaleDown : scaleUp;
   const beamOpacity = useTransform(scrollYProgress, [0.01, 0.08, 0.92, 0.99], [0, 1, 1, 0]);
 
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -87,7 +90,7 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe Laser com Origem Dinâmica Baseada no Sentido Exato do Scroll */}
+        {/* Feixe Laser com Simetria Perfeita de Subida e Descida */}
         <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5 pointer-events-none">
           <motion.div 
             style={{ 
