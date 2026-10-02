@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image"; // Importação do componente de imagem do Next.js
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ArrowRight, Mail } from "lucide-react";
 import Lenis from '@studio-freight/lenis';
@@ -62,9 +63,16 @@ export default function Home() {
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-0 left-0 w-full z-50 px-6 sm:px-12 py-6 flex items-center justify-between mix-blend-difference"
       >
-        <div className="font-serif text-lg sm:text-xl tracking-[0.3em] text-white uppercase font-bold">
-          Formighieri
-        </div>
+        {/* LOGO OFICIAL APLICADA AQUI */}
+        <a href="#" className="relative block h-6 w-32 md:h-8 md:w-48">
+          <Image 
+            src="/logo.png" /* Mude para .svg se o seu arquivo for vetor */
+            alt="Formighieri Pisos de Madeira"
+            fill
+            style={{ objectFit: "contain", objectPosition: "left" }}
+            priority
+          />
+        </a>
         
         {/* Menu Desktop */}
         <div className="hidden lg:flex items-center space-x-8 text-[10px] uppercase tracking-[0.2em] text-white/70 font-medium">
@@ -121,7 +129,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* CATÁLOGO TIPOGRÁFICO INTERATIVO (Onde a mágica acontece) */}
+      {/* CATÁLOGO TIPOGRÁFICO INTERATIVO */}
       <section id="produtos" className="relative py-32 px-6 sm:px-12 max-w-[1400px] mx-auto min-h-screen">
         <div className="mb-20">
           <span className="text-[#cda661] text-[10px] uppercase tracking-[0.3em] mb-4 block">Portfólio Completo</span>
@@ -130,7 +138,6 @@ export default function Home() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start relative">
           
-          {/* Lista Esquerda: As categorias e subprodutos */}
           <div className="lg:col-span-7 flex flex-col w-full z-10">
             {fullCatalog.map((cat, idx) => (
               <div 
@@ -158,7 +165,6 @@ export default function Home() {
             <div className="border-t border-white/10 w-full"></div>
           </div>
 
-          {/* Imagem Direita: Sticky com fade fluído baseado no Hover */}
           <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[70vh] w-full rounded-sm overflow-hidden bg-[#110f0e]">
             <AnimatePresence mode="wait">
               <motion.div
@@ -173,7 +179,6 @@ export default function Home() {
             </AnimatePresence>
             <div className="absolute inset-0 bg-black/20" />
             
-            {/* Tag que flutua em cima da imagem */}
             <div className="absolute bottom-8 left-8">
               <p className="text-white font-serif text-2xl drop-shadow-lg">
                 Linha {fullCatalog[hoveredCategory].category.split(" ")[0]}
@@ -184,7 +189,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MOSAICO DE OBRAS (Mantido pois valoriza absurdamente o produto final) */}
+      {/* MOSAICO DE OBRAS */}
       <section id="obras" className="py-32 px-4 sm:px-8 max-w-[1400px] mx-auto bg-[#0c0a09]">
         <div className="text-center mb-24">
           <span className="text-[#cda661] text-[10px] uppercase tracking-[0.3em] mb-4 block">Obras Realizadas</span>
