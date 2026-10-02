@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, Mail, Compass, ShieldCheck, Award } from "lucide-react";
+import { ArrowRight, Mail, Compass, ShieldCheck, Award, Phone, MapPin, Facebook, Youtube, Instagram, MessageCircle } from "lucide-react";
 import Lenis from '@studio-freight/lenis';
 
 export default function Home() {
@@ -48,7 +48,7 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // Escala dinâmica: Se descendo, cresce de 0 a 1 do topo. Se subindo, cresce de 0 a 1 invertido (da base para cima).
+  // Escala dinâmica do feixe laser
   const scaleDown = useTransform(scrollYProgress, [0, 0.98], [0, 1]);
   const scaleUp = useTransform(scrollYProgress, [0.02, 1], [1, 0]);
   
@@ -85,12 +85,23 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#ffd700] selection:text-[#0c0a09] relative flex">
       
+      {/* BOTÃO FLUTUANTE WHATSAPP FIXO */}
+      <a 
+        href="https://wa.me/5541998050400" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.5)] hover:scale-110 transition-all duration-300"
+        aria-label="WhatsApp"
+      >
+        <MessageCircle className="w-7 h-7 fill-white" />
+      </a>
+
       {/* MENU LATERAL CINEMÁTICO */}
       <motion.nav 
         style={{ opacity: menuOpacity, x: menuX }}
-        className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
+        className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-6 pointer-events-auto"
       >
-        {/* Feixe Laser com Simetria Perfeita de Subida e Descida */}
+        {/* Feixe Laser com Origem Dinâmica Baseada no Sentido Exato do Scroll */}
         <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5 pointer-events-none">
           <motion.div 
             style={{ 
@@ -103,7 +114,7 @@ export default function Home() {
         </div>
 
         {/* Logo Reduzida */}
-        <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2">
+        <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-1">
            <Image 
             src="/logo.png" 
             alt="Formighieri"
@@ -112,21 +123,25 @@ export default function Home() {
           />
         </a>
 
-        {/* Links com Ouro Vivo */}
-        <div className="flex flex-col items-center space-y-10 flex-grow justify-center w-full">
-          <a href="#produtos" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Produtos</a>
-          <a href="#diferenciais" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Diferenciais</a>
-          <a href="#obras" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Obras</a>
+        {/* Links Completos */}
+        <div className="flex flex-col items-center space-y-4 flex-grow justify-center w-full my-2">
+          <a href="#produtos" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Produtos</a>
+          <a href="#promocao" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-[#ffd700]/90 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Promoção</a>
+          <a href="#diferenciais" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Diferenciais</a>
+          <a href="#servicos" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Serviços</a>
+          <a href="#obras" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Obras</a>
+          <a href="#blog" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Blog</a>
+          <a href="#contato" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Contato</a>
         </div>
 
-        {/* Ícone de Contato */}
+        {/* Ícone de Contato WhatsApp */}
         <a 
           href="https://wa.me/5541998050400" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffd700] hover:border-[#ffd700] hover:text-[#0c0a09] hover:shadow-[0_0_25px_rgba(255,215,0,0.6)] transition-all duration-300 text-white"
+          className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffd700] hover:border-[#ffd700] hover:text-[#0c0a09] hover:shadow-[0_0_25px_rgba(255,215,0,0.6)] transition-all duration-300 text-white mb-1"
         >
-          <Mail className="w-4 h-4" />
+          <Mail className="w-3.5 h-3.5" />
         </a>
       </motion.nav>
 
@@ -295,20 +310,66 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA FINAL */}
-        <section className="py-40 px-8 flex flex-col items-center justify-center text-center border-t border-white/5 bg-[#080706]">
-          <span className="text-[#ffd700] text-xs uppercase tracking-[0.4em] mb-8 block font-semibold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">Inicie seu Projeto</span>
+        {/* CTA & CONTATO FINAL */}
+        <section id="contato" className="py-32 px-8 flex flex-col items-center justify-center text-center border-t border-white/5 bg-[#080706]">
+          <span className="text-[#ffd700] text-xs uppercase tracking-[0.4em] mb-6 block font-semibold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">Inicie seu Projeto</span>
           <a 
             href="https://wa.me/5541998050400" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="group relative inline-block"
+            className="group relative inline-block mb-20"
           >
             <h2 className="font-serif text-5xl sm:text-7xl lg:text-[7vw] text-white/50 group-hover:text-[#ffd700] group-hover:drop-shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all duration-700 cursor-pointer flex items-center justify-center gap-6">
               Fale Conosco
               <ArrowRight className="w-12 h-12 sm:w-20 sm:h-20 text-[#ffd700] transform -rotate-45 group-hover:translate-x-4 group-hover:-translate-y-4 drop-shadow-[0_0_15px_rgba(255,215,0,0.6)] transition-all duration-700" />
             </h2>
           </a>
+
+          {/* RODAPÉ DETALHADO */}
+          <div className="w-full max-w-6xl border-t border-white/10 pt-16 pb-8 flex flex-col items-center space-y-8">
+            
+            {/* Redes Sociais */}
+            <div className="flex items-center space-x-6">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-[#ffd700] hover:border-[#ffd700] transition-all duration-300">
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-[#ffd700] hover:border-[#ffd700] transition-all duration-300">
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-[#ffd700] hover:border-[#ffd700] transition-all duration-300">
+                <Youtube className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Telefones e Endereço */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-white/70 font-light">
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-[#ffd700]" />
+                <span>(41) 3342-3838 / (41) 99805-0400</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#ffd700]" />
+                <span>Rua André Zanetti, 315 – Mercês, Curitiba – PR</span>
+              </div>
+            </div>
+
+            {/* Copyright e Assinatura Estratégica */}
+            <div className="w-full border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-white/40 tracking-wider">
+              <p>© 2026 FORMIGHIERI PISOS DE MADEIRA. TODOS OS DIREITOS RESERVADOS.</p>
+              <p className="mt-4 sm:mt-0">
+                ESTRATÉGIA POR{" "}
+                <a 
+                  href="https://mauricio-roberto-rudy.vercel.app/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[#ffd700] hover:underline font-semibold"
+                >
+                  MAURICIO RUDY
+                </a>
+              </p>
+            </div>
+
+          </div>
         </section>
 
       </motion.div>
