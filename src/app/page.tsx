@@ -33,9 +33,9 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.05, 0.15], [-40, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.05, 0.15], ["0px", "160px"]);
 
-  // O feixe de luz laser cresce e acompanha a rolagem
-  const beamHeight = useTransform(scrollYProgress, [0.05, 0.8], ["0%", "100%"]);
-  const beamOpacity = useTransform(scrollYProgress, [0.05, 0.12], [0, 1]);
+  // O feixe de luz laser cresce e acompanha a rolagem de ponta a ponta
+  const beamHeight = useTransform(scrollYProgress, [0.02, 0.95], ["0%", "100%"]);
+  const beamOpacity = useTransform(scrollYProgress, [0.02, 0.08, 0.9, 0.98], [0, 1, 1, 0]);
 
   // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -73,7 +73,7 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe de Luz Laser Dourado que corre com o scroll */}
+        {/* Feixe de Luz Laser Dourado com fluxo direcional dinâmico */}
         <motion.div 
           style={{ height: beamHeight, opacity: beamOpacity }}
           className="absolute top-0 right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-transparent shadow-[0_0_15px_#ffd700]"
