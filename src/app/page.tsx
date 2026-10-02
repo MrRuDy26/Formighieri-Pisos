@@ -8,53 +8,6 @@ import Lenis from '@studio-freight/lenis';
 
 export default function Home() {
   const [hoveredCategory, setHoveredCategory] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<"down" | "up">("down");
-
-  // Inicializa o Scroll Suave (Lenis)
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-    });
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
-  }, []);
-
-  // Monitora a direção exata do scroll (para cima ou para baixo)
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY + 2) {
-        setScrollDirection("down");
-      } else if (currentScrollY < lastScrollY - 2) {
-        setScrollDirection("up");
-      }
-      lastScrollY = currentScrollY;
-    };
-Para criar exatamente esse efeito de **cometa de luz** (com uma cabeça brilhante e uma cauda em degradê que se desloca inteira de ponta a ponta, sem esticar ou encolher, e que respeita o sentido do seu scroll), nós precisamos mudar a estratégia para uma **máscara de gradiente animada** via Framer Motion. 
-
-Dessa forma, o traço de luz se desloca como um feixe físico contínuo que surge, atravessa a lateral e se dissipa suavemente ao chegar nas extremidades (tanto descendo quanto subindo).
-
-Aqui está o código completo do `src/app/page.tsx` com o efeito de cometa laser direcional e todas as interações refinadas que construímos:
-
-```typescript
-"use client";
-
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, Mail, Compass, ShieldCheck, Award } from "lucide-react";
-import Lenis from '@studio-freight/lenis';
-
-export default function Home() {
-  const [hoveredCategory, setHoveredCategory] = useState(0);
 
   // Inicializa o Scroll Suave (Lenis)
   useEffect(() => {
@@ -80,7 +33,7 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // O Efeito Cometa: O gradiente se desloca linearmente de 0% a 100% acompanhando o scroll inteiro
+  // O Efeito Cometa: O gradiente se desloca linearmente de -100% a 100% acompanhando o scroll inteiro
   const cometPosition = useTransform(scrollYProgress, [0, 1], ["-100%", "100%"]);
 
   // Efeitos de Parallax no Hero
@@ -92,22 +45,22 @@ export default function Home() {
     {
       category: "Pisos de Madeira",
       items: ["Estruturado", "Maciço", "Multilaminado", "Multistrato", "Parquet", "Rústico", "Taco", "Taco Palito", "Versailles"],
-      img: "[https://images.unsplash.com/photo-1546215367-72caede26d96?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1546215367-72caede26d96?q=80&w=1200&auto=format&fit=crop)"
+      img: "https://images.unsplash.com/photo-1546215367-72caede26d96?q=80&w=1200&auto=format&fit=crop"
     },
     {
       category: "Áreas Externas",
       items: ["Deck de Madeira", "Deck Ecológico", "Deck Ripado", "Pergolado de Madeira"],
-      img: "[https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1200&auto=format&fit=crop)"
+      img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1200&auto=format&fit=crop"
     },
     {
       category: "Painéis & Acabamentos",
       items: ["Painel Ripado", "Brise", "Rodapé e Acabamento", "Escadas"],
-      img: "[https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=1200&auto=format&fit=crop)"
+      img: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=1200&auto=format&fit=crop"
     },
     {
       category: "Soluções Práticas",
       items: ["Piso Vinílico", "Kit de Limpeza para Piso"],
-      img: "[https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop)"
+      img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
     }
   ];
 
@@ -119,7 +72,7 @@ export default function Home() {
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe Cometa de Luz Laser (Traço com cabeça brilhante e cauda em degradê que desliza com o scroll) */}
+        {/* Feixe Cometa de Luz Laser */}
         <div className="absolute top-0 right-0 w-[2px] h-full overflow-hidden bg-white/5">
           <motion.div 
             style={{ y: cometPosition }}
@@ -129,7 +82,12 @@ export default function Home() {
 
         {/* Logo Reduzida */}
         <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2">
-           <Image "contain" alt="Formighieri" fill objectFit: src="/logo.png" style="{{" }}/>
+           <Image 
+            src="/logo.png" 
+            alt="Formighieri"
+            fill
+            style={{ objectFit: "contain" }}
+          />
         </a>
 
         {/* Links com Ouro Vivo */}
@@ -141,12 +99,12 @@ export default function Home() {
 
         {/* Ícone de Contato */}
         <a 
-          href="[https://wa.me/5541998050400](https://wa.me/5541998050400)" 
+          href="https://wa.me/5541998050400" 
           target="_blank" 
           rel="noopener noreferrer"
           className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffd700] hover:border-[#ffd700] hover:text-[#0c0a09] hover:shadow-[0_0_25px_rgba(255,215,0,0.6)] transition-all duration-300 text-white"
         >
-          <Mail className="w-4 h-4"/>
+          <Mail className="w-4 h-4" />
         </a>
       </motion.nav>
 
@@ -158,7 +116,7 @@ export default function Home() {
           <motion.div 
             className="absolute inset-0 w-full h-[120%] bg-cover bg-center"
             style={{ 
-              backgroundImage: `url('[https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2500&auto=format&fit=crop](https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2500&auto=format&fit=crop)')`,
+              backgroundImage: `url('https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2500&auto=format&fit=crop')`,
               y: yBackground 
             }}
           />
@@ -174,7 +132,13 @@ export default function Home() {
               transition={{ duration: 1.2, ease: "easeOut" }}
               className="relative h-20 w-64 sm:h-32 sm:w-96 mb-8 drop-shadow-[0_0_20px_rgba(255,215,0,0.2)]"
             >
-              <Image "center" "contain", alt="Formighieri Pisos de Madeira" fill objectFit: objectPosition: priority src="/logo.png" style="{{" }}/>
+              <Image 
+                src="/logo.png" 
+                alt="Formighieri Pisos de Madeira"
+                fill
+                style={{ objectFit: "contain", objectPosition: "center" }}
+                priority
+              />
             </motion.div>
 
             <motion.div 
@@ -252,17 +216,17 @@ export default function Home() {
         <section id="diferenciais" className="py-24 px-8 sm:px-16 max-w-[1400px] mx-auto border-t border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
             <div className="space-y-6 group">
-              <Compass className="w-10 h-10 text-[#ffd700] group-hover:scale-110 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-300"/>
+              <Compass className="w-10 h-10 text-[#ffd700] group-hover:scale-110 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-300" />
               <h3 className="font-serif text-3xl text-white">Consultoria Técnica</h3>
               <p className="text-white/70 text-base font-light leading-relaxed">Suporte especializado para escritórios de arquitetura, desde a paginação até a entrega final.</p>
             </div>
             <div className="space-y-6 group">
-              <ShieldCheck className="w-10 h-10 text-[#ffd700] group-hover:scale-110 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-300"/>
+              <ShieldCheck className="w-10 h-10 text-[#ffd700] group-hover:scale-110 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-300" />
               <h3 className="font-serif text-3xl text-white">Mão de Obra Própria</h3>
               <p className="text-white/70 text-base font-light leading-relaxed">Instalação e revitalização feitas por uma equipe própria com maquinário de alta precisão.</p>
             </div>
             <div className="space-y-6 group">
-              <Award className="w-10 h-10 text-[#ffd700] group-hover:scale-110 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-300"/>
+              <Award className="w-10 h-10 text-[#ffd700] group-hover:scale-110 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-300" />
               <h3 className="font-serif text-3xl text-white">Garantia Histórica</h3>
               <p className="text-white/70 text-base font-light leading-relaxed">A segurança de uma empresa com sete décadas de tradição operando na capital paranaense.</p>
             </div>
@@ -284,7 +248,7 @@ export default function Home() {
               transition={{ duration: 1 }}
               className="md:col-span-7 relative rounded-sm overflow-hidden group cursor-pointer border border-white/5"
             >
-              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('[https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop)')" }} />
+              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop')" }} />
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700" />
               <div className="absolute bottom-10 left-10">
                 <p className="text-[#ffd700] text-xs uppercase tracking-[0.2em] font-medium mb-2 drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]">Residência CM</p>
@@ -299,7 +263,7 @@ export default function Home() {
               transition={{ duration: 1, delay: 0.2 }}
               className="md:col-span-5 relative rounded-sm overflow-hidden group cursor-pointer border border-white/5"
             >
-              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('[https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800&auto=format&fit=crop](https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800&auto=format&fit=crop)')" }} />
+              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800&auto=format&fit=crop')" }} />
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700" />
               <div className="absolute bottom-10 left-10">
                 <p className="text-[#ffd700] text-xs uppercase tracking-[0.2em] font-medium mb-2 drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]">Residência RF</p>
@@ -313,14 +277,14 @@ export default function Home() {
         <section className="py-40 px-8 flex flex-col items-center justify-center text-center border-t border-white/5 bg-[#080706]">
           <span className="text-[#ffd700] text-xs uppercase tracking-[0.4em] mb-8 block font-semibold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">Inicie seu Projeto</span>
           <a 
-            href="[https://wa.me/5541998050400](https://wa.me/5541998050400)" 
+            href="https://wa.me/5541998050400" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group relative inline-block"
           >
             <h2 className="font-serif text-5xl sm:text-7xl lg:text-[7vw] text-white/50 group-hover:text-[#ffd700] group-hover:drop-shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all duration-700 cursor-pointer flex items-center justify-center gap-6">
               Fale Conosco
-              <ArrowRight className="w-12 h-12 sm:w-20 sm:h-20 text-[#ffd700] transform -rotate-45 group-hover:translate-x-4 group-hover:-translate-y-4 drop-shadow-[0_0_15px_rgba(255,215,0,0.6)] transition-all duration-700"/>
+              <ArrowRight className="w-12 h-12 sm:w-20 sm:h-20 text-[#ffd700] transform -rotate-45 group-hover:translate-x-4 group-hover:-translate-y-4 drop-shadow-[0_0_15px_rgba(255,215,0,0.6)] transition-all duration-700" />
             </h2>
           </a>
         </section>
