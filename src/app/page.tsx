@@ -3,25 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ArrowRight, Mail } from "lucide-react";
-// Motor de scroll suave
 import Lenis from '@studio-freight/lenis';
 
 export default function Home() {
-  // Inicialização do Lenis Smooth Scroll
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing perfeito
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       smoothWheel: true,
     });
-
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
-
     return () => lenis.destroy();
   }, []);
 
@@ -30,30 +26,36 @@ export default function Home() {
   const yText = useTransform(scrollYProgress, [0, 0.5], ["0%", "-40%"]);
   const opacityText = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
-  const [activeTab, setActiveTab] = useState(0);
-
-  const collections = [
+  // O catálogo real, estruturado de forma inteligente
+  const fullCatalog = [
     {
-      name: "Pisos Estruturados",
-      desc: "Reale Carvalho, Tauari Aspen, Peroba Mica.",
-      img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop"
+      category: "Pisos de Madeira",
+      items: ["Estruturado", "Maciço", "Multilaminado", "Multistrato", "Parquet", "Rústico", "Taco", "Taco Palito", "Versailles"],
+      img: "https://images.unsplash.com/photo-1546215367-72caede26d96?q=80&w=1200&auto=format&fit=crop"
     },
     {
-      name: "Pisos Maciços",
-      desc: "Tradição em Taco, Taco Palito e Assoalhos.",
-      img: "https://images.unsplash.com/photo-1546215367-72caede26d96?q=80&w=1600&auto=format&fit=crop"
+      category: "Áreas Externas",
+      items: ["Deck de Madeira", "Deck Ecológico", "Deck Ripado", "Pergolado de Madeira"],
+      img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1200&auto=format&fit=crop"
     },
     {
-      name: "Decks & Externos",
-      desc: "Cumaru, Deck Ecológico e Painéis Ripados.",
-      img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1600&auto=format&fit=crop"
+      category: "Painéis & Acabamentos",
+      items: ["Painel Ripado", "Brise", "Rodapé e Acabamento", "Escadas"],
+      img: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      category: "Soluções Práticas",
+      items: ["Piso Vinílico", "Kit de Limpeza para Piso de Madeira"],
+      img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
     }
   ];
+
+  const [hoveredCategory, setHoveredCategory] = useState(0);
 
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#cda661] selection:text-[#0c0a09]">
       
-      {/* NAVBAR */}
+      {/* NAVBAR COMPLETA */}
       <motion.nav 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -63,18 +65,28 @@ export default function Home() {
         <div className="font-serif text-lg sm:text-xl tracking-[0.3em] text-white uppercase font-bold">
           Formighieri
         </div>
+        
+        {/* Menu Desktop */}
+        <div className="hidden lg:flex items-center space-x-8 text-[10px] uppercase tracking-[0.2em] text-white/70 font-medium">
+          <a href="#produtos" className="hover:text-white transition">Produtos</a>
+          <a href="#promocao" className="hover:text-[#cda661] transition">Promoção</a>
+          <a href="#diferenciais" className="hover:text-white transition">Diferenciais</a>
+          <a href="#obras" className="hover:text-white transition">Obras Realizadas</a>
+          <a href="#blog" className="hover:text-white transition">Blog</a>
+        </div>
+
         <a 
           href="https://wa.me/5541998050400" 
           target="_blank" 
           rel="noopener noreferrer"
           className="group flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest text-white hover:text-[#cda661] transition-colors duration-500"
         >
-          <span>Atendimento</span>
+          <span>Contato</span>
           <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
         </a>
       </motion.nav>
 
-      {/* HERO PARALLAX - Foco no produto e nos 75 anos */}
+      {/* HERO PARALLAX */}
       <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div 
           className="absolute inset-0 w-full h-[120%] bg-cover bg-center"
@@ -83,7 +95,6 @@ export default function Home() {
             y: yBackground 
           }}
         />
-        {/* Máscara absoluta preta para zerar linhas no fim da seção */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0c0a09]/40 via-[#0c0a09]/60 to-[#0c0a09]" />
 
         <motion.div 
@@ -110,90 +121,77 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* TRADIÇÃO E FOCO NA MARCA */}
-      <section className="relative py-32 px-8 max-w-6xl mx-auto flex items-center justify-center text-center">
-        <motion.h2 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif text-3xl sm:text-5xl lg:text-6xl leading-[1.3] text-[#EAE6DF]"
-        >
-          Desde 1950, a assinatura <br/>
-          <span className="text-white/40">por trás dos projetos residenciais mais sofisticados.</span>
-        </motion.h2>
-      </section>
-
-      {/* VITRINE CINEMÁTICA - DADOS REAIS DA FORMIGHIERI */}
-      <section className="relative py-20 px-4 sm:px-8 max-w-[1400px] mx-auto min-h-[800px] flex flex-col justify-between">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 z-20 relative gap-8">
-          <div>
-            <span className="text-[#cda661] text-[10px] uppercase tracking-[0.3em] mb-4 block">Soluções Completas</span>
-            <h3 className="font-serif text-4xl sm:text-5xl">Catálogo Formighieri</h3>
-          </div>
-          
-          <div className="flex flex-wrap gap-6">
-            {collections.map((item, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveTab(index)}
-                className="group flex items-center gap-3 focus:outline-none"
-              >
-                <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${activeTab === index ? 'text-[#cda661]' : 'text-white/40 group-hover:text-white'}`}>
-                  {item.name}
-                </span>
-                {activeTab === index && (
-                  <motion.div layoutId="dot-nav" className="w-1.5 h-1.5 rounded-full bg-[#cda661]" />
-                )}
-              </button>
-            ))}
-          </div>
+      {/* CATÁLOGO TIPOGRÁFICO INTERATIVO (Onde a mágica acontece) */}
+      <section id="produtos" className="relative py-32 px-6 sm:px-12 max-w-[1400px] mx-auto min-h-screen">
+        <div className="mb-20">
+          <span className="text-[#cda661] text-[10px] uppercase tracking-[0.3em] mb-4 block">Portfólio Completo</span>
+          <h2 className="font-serif text-4xl sm:text-6xl text-white">Nosso Catálogo</h2>
         </div>
 
-        <div className="relative w-full h-[60vh] sm:h-[70vh] bg-[#0c0a09]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, filter: "blur(10px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-              className="absolute inset-0"
-            >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start relative">
+          
+          {/* Lista Esquerda: As categorias e subprodutos */}
+          <div className="lg:col-span-7 flex flex-col w-full z-10">
+            {fullCatalog.map((cat, idx) => (
               <div 
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${collections[activeTab].img}')` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a09] via-transparent to-transparent opacity-90" />
-            </motion.div>
-          </AnimatePresence>
+                key={idx} 
+                className="group border-t border-white/10 py-12 cursor-default"
+                onMouseEnter={() => setHoveredCategory(idx)}
+              >
+                <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-12 transition-all duration-500">
+                  <h3 className={`font-serif text-3xl sm:text-4xl transition-colors duration-500 w-full md:w-1/2 ${hoveredCategory === idx ? 'text-[#cda661]' : 'text-white'}`}>
+                    {cat.category}
+                  </h3>
+                  <div className="w-full md:w-1/2">
+                    <ul className="flex flex-col gap-3">
+                      {cat.items.map((item, i) => (
+                        <li key={i} className="text-white/60 text-sm font-light uppercase tracking-wider hover:text-white transition-colors flex items-center gap-2 cursor-pointer">
+                          <span className="w-1 h-1 bg-[#cda661] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="border-t border-white/10 w-full"></div>
+          </div>
 
-          <div className="absolute bottom-10 left-8 sm:left-12 z-20">
+          {/* Imagem Direita: Sticky com fade fluído baseado no Hover */}
+          <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[70vh] w-full rounded-sm overflow-hidden bg-[#110f0e]">
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.8 }}
-              >
-                <p className="font-serif text-3xl sm:text-4xl text-white">{collections[activeTab].name}</p>
-                <p className="text-[#cda661] text-xs uppercase tracking-[0.2em] mt-3">{collections[activeTab].desc}</p>
-              </motion.div>
+                key={hoveredCategory}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url('${fullCatalog[hoveredCategory].img}')` }}
+              />
             </AnimatePresence>
+            <div className="absolute inset-0 bg-black/20" />
+            
+            {/* Tag que flutua em cima da imagem */}
+            <div className="absolute bottom-8 left-8">
+              <p className="text-white font-serif text-2xl drop-shadow-lg">
+                Linha {fullCatalog[hoveredCategory].category.split(" ")[0]}
+              </p>
+            </div>
           </div>
+
         </div>
       </section>
 
-      {/* MOSAICO DE OBRAS REALIZADAS (CSS GRID ASSIMÉTRICO) */}
-      <section className="py-32 px-4 sm:px-8 max-w-[1400px] mx-auto">
+      {/* MOSAICO DE OBRAS (Mantido pois valoriza absurdamente o produto final) */}
+      <section id="obras" className="py-32 px-4 sm:px-8 max-w-[1400px] mx-auto bg-[#0c0a09]">
         <div className="text-center mb-24">
           <span className="text-[#cda661] text-[10px] uppercase tracking-[0.3em] mb-4 block">Obras Realizadas</span>
           <h2 className="font-serif text-4xl sm:text-5xl">Onde a madeira ganha vida.</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 auto-rows-[300px] sm:auto-rows-[450px]">
-          {/* Obra 1 - Grande (Esquerda) */}
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -209,7 +207,6 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Obra 2 - Estreita (Direita) */}
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -224,31 +221,15 @@ export default function Home() {
               <h4 className="font-serif text-2xl text-white">Estruturado Reale Carvalho</h4>
             </div>
           </motion.div>
-
-          {/* Obra 3 - Larga inferior */}
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 1 }}
-            className="md:col-span-12 relative rounded-sm overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop')" }} />
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-700" />
-            <div className="absolute bottom-8 left-8">
-              <p className="text-[#cda661] text-[10px] uppercase tracking-widest mb-1">Projeto Corporativo</p>
-              <h4 className="font-serif text-2xl text-white">Painel Ripado & Deck Cumaru</h4>
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* NEWSLETTER E CTA FINAL */}
+      {/* NEWSLETTER / FOOTER */}
       <section className="py-32 px-8 flex flex-col items-center justify-center text-center border-t border-white/5 bg-[#080706]">
         <div className="max-w-2xl mx-auto space-y-8 mb-24">
           <Mail className="w-8 h-8 text-[#cda661] mx-auto opacity-50" />
           <h3 className="font-serif text-3xl text-white">Inspiração no seu e-mail.</h3>
-          <p className="text-white/50 text-sm font-light">Assine a newsletter da Formighieri para receber tendências de arquitetura e novidades sobre pisos nobres.</p>
+          <p className="text-white/50 text-sm font-light">Assine a newsletter da Formighieri para receber tendências de arquitetura e novidades sobre os nossos produtos.</p>
           <form className="flex w-full mt-4 border-b border-white/20 focus-within:border-[#cda661] transition-colors pb-2">
             <input type="email" placeholder="SEU E-MAIL" className="bg-transparent w-full outline-none text-xs tracking-widest uppercase text-white placeholder:text-white/20" />
             <button type="button" className="text-[#cda661] text-xs uppercase tracking-widest hover:text-white transition">Assinar</button>
