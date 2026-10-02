@@ -25,17 +25,17 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora o progresso exato da rolagem da página (de 0 a 1)
+  // Monitora o progresso exato da rolagem de toda a página (de 0 a 1)
   const { scrollYProgress } = useScroll();
   
-  // O menu aparece suavemente assim que passa do início (entre 5% e 15% do scroll)
-  const menuOpacity = useTransform(scrollYProgress, [0.05, 0.15], [0, 1]);
-  const menuX = useTransform(scrollYProgress, [0.05, 0.15], [-40, 0]);
-  const contentMargin = useTransform(scrollYProgress, [0.05, 0.15], ["0px", "160px"]);
+  // O menu aparece suavemente no início da rolagem
+  const menuOpacity = useTransform(scrollYProgress, [0.03, 0.1], [0, 1]);
+  const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
+  const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // O feixe de luz laser cresce e acompanha a rolagem
-  const beamHeight = useTransform(scrollYProgress, [0.05, 0.8], ["0%", "100%"]);
-  const beamOpacity = useTransform(scrollYProgress, [0.05, 0.12], [0, 1]);
+  // O feixe de luz laser agora percorre 100% da altura do site guiado pelo scroll
+  const beamHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const beamOpacity = useTransform(scrollYProgress, [0.02, 0.08], [0, 1]);
 
   // Efeitos de Parallax no Hero
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -68,15 +68,15 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#ffd700] selection:text-[#0c0a09] relative flex">
       
-      {/* MENU LATERAL CINEMÁTICO CONTROLADO POR SCROLL */}
+      {/* MENU LATERAL CINEMÁTICO */}
       <motion.nav 
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe de Luz Laser Dourado que corre com o scroll */}
+        {/* Feixe de Luz Elástico amarrado de ponta a ponta do site */}
         <motion.div 
           style={{ height: beamHeight, opacity: beamOpacity }}
-          className="absolute top-0 right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-transparent shadow-[0_0_15px_#ffd700]"
+          className="absolute top-0 right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_15px_#ffd700]"
         />
 
         {/* Logo Reduzida */}
@@ -89,14 +89,14 @@ export default function Home() {
           />
         </a>
 
-        {/* Links com Ouro Vivo no Hover */}
+        {/* Links com Ouro Vivo */}
         <div className="flex flex-col items-center space-y-10 flex-grow justify-center w-full">
           <a href="#produtos" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Produtos</a>
           <a href="#diferenciais" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Diferenciais</a>
           <a href="#obras" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Obras</a>
         </div>
 
-        {/* Ícone de Contato Luminoso */}
+        {/* Ícone de Contato */}
         <a 
           href="https://wa.me/5541998050400" 
           target="_blank" 
@@ -107,7 +107,7 @@ export default function Home() {
         </a>
       </motion.nav>
 
-      {/* CONTEÚDO PRINCIPAL (Margem dinâmica amarrada ao scroll) */}
+      {/* CONTEÚDO PRINCIPAL */}
       <motion.div style={{ marginLeft: contentMargin }} className="w-full">
         
         {/* HERO SECTION */}
@@ -155,7 +155,7 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* CATÁLOGO TIPOGRÁFICO INTERATIVO */}
+        {/* CATÁLOGO TIPOGRÁFICO COM REVEAL PROGRESSIVO */}
         <section id="produtos" className="relative py-32 px-8 sm:px-16 max-w-[1400px] mx-auto min-h-screen">
           <div className="mb-24 border-b border-white/10 pb-8">
             <span className="text-[#ffd700] text-xs uppercase tracking-[0.4em] mb-4 block font-semibold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">Portfólio Completo</span>
@@ -165,8 +165,12 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start relative">
             <div className="lg:col-span-7 flex flex-col w-full z-10 space-y-4">
               {fullCatalog.map((cat, idx) => (
-                <div 
-                  key={idx} 
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.8, delay: idx * 0.15 }}
                   className="group py-8 lg:py-12 cursor-default border-b border-white/5 last:border-0"
                   onMouseEnter={() => setHoveredCategory(idx)}
                 >
@@ -177,18 +181,26 @@ export default function Home() {
                     <div className="w-full lg:w-1/2 mt-2 lg:mt-0">
                       <ul className="flex flex-col gap-4">
                         {cat.items.map((item, i) => (
-                          <li key={i} className="text-white/75 text-sm lg:text-base font-light tracking-wide hover:text-[#ffd700] hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)] transition-all duration-300 flex items-center gap-3 cursor-pointer">
+                          <motion.li 
+                            key={i} 
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: i * 0.05 }}
+                            className="text-white/75 text-sm lg:text-base font-light tracking-wide hover:text-[#ffd700] hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)] transition-all duration-300 flex items-center gap-3 cursor-pointer"
+                          >
                             <span className="w-1.5 h-1.5 bg-[#ffd700] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_6px_#ffd700]" />
                             {item}
-                          </li>
+                          </motion.li>
                         ))}
                       </ul>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
+            {/* Imagem Fixa Garantida desde o carregamento */}
             <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[75vh] w-full rounded-sm overflow-hidden bg-[#110f0e] shadow-2xl border border-white/5">
               <AnimatePresence mode="wait">
                 <motion.div
