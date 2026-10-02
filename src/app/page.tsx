@@ -8,6 +8,7 @@ import Lenis from '@studio-freight/lenis';
 
 export default function Home() {
   const [hoveredCategory, setHoveredCategory] = useState(0);
+  const [beamDirection, setBeamDirection] = useState<"down" | "up">("down");
 
   // Inicializa o Scroll Suave (Lenis)
   useEffect(() => {
@@ -25,15 +26,30 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // Monitora o progresso exato da rolagem da página (de 0 a 1)
+  // Monitora a direção e o progresso exato da rolagem
   const { scrollYProgress } = useScroll();
   
-  // O menu aparece suavemente assim que passa do início (entre 5% e 15% do scroll)
-  const menuOpacity = useTransform(scrollYProgress, [0.05, 0.15], [0, 1]);
-  const menuX = useTransform(scrollYProgress, [0.05, 0.15], [-40, 0]);
-  const contentMargin = useTransform(scrollYProgress, [0.05, 0.15], ["0px", "160px"]);
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY) {
+        setBeamDirection("down");
+      } else if (currentScrollY < lastScrollY) {
+        setBeamDirection("up");
+      }
+      lastScrollY = currentScrollY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  
+  // O menu aparece suavemente
+  const menuOpacity = useTransform(scrollYProgress, [0.03, 0.1], [0, 1]);
+  const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
+  const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // O feixe de luz laser cresce e acompanha a rolagem de ponta a ponta
+  // Feixe laser dinâmico guiado por scroll
   const beamHeight = useTransform(scrollYProgress, [0.02, 0.95], ["0%", "100%"]);
   const beamOpacity = useTransform(scrollYProgress, [0.02, 0.08, 0.9, 0.98], [0, 1, 1, 0]);
 
@@ -68,14 +84,18 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#ffd700] selection:text-[#0c0a09] relative flex">
       
-      {/* MENU LATERAL CINEMÁTICO CONTROLADO POR SCROLL */}
+      {/* MENU LATERAL CINEMÁTICO */}
       <motion.nav 
         style={{ opacity: menuOpacity, x: menuX }}
         className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09]/95 backdrop-blur-sm flex flex-col items-center justify-between py-10 pointer-events-auto"
       >
-        {/* Feixe de Luz Laser Dourado com fluxo direcional dinâmico */}
+        {/* Feixe de Luz Laser Dourado com direção orientada pelo scroll */}
         <motion.div 
-          style={{ height: beamHeight, opacity: beamOpacity }}
+          style={{ 
+            height: beamHeight, 
+            opacity: beamOpacity,
+            transformOrigin: beamDirection === "down" ? "top" : "bottom"
+          }}
           className="absolute top-0 right-0 w-[2px] bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-transparent shadow-[0_0_15px_#ffd700]"
         />
 
@@ -89,14 +109,14 @@ export default function Home() {
           />
         </a>
 
-        {/* Links com Ouro Vivo no Hover */}
+        {/* Links com Ouro Vivo */}
         <div className="flex flex-col items-center space-y-10 flex-grow justify-center w-full">
           <a href="#produtos" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Produtos</a>
           <a href="#diferenciais" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Diferenciais</a>
           <a href="#obras" className="text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Obras</a>
         </div>
 
-        {/* Ícone de Contato Luminoso */}
+        {/* Ícone de Contato */}
         <a 
           href="https://wa.me/5541998050400" 
           target="_blank" 
@@ -107,7 +127,7 @@ export default function Home() {
         </a>
       </motion.nav>
 
-      {/* CONTEÚDO PRINCIPAL (Margem dinâmica amarrada ao scroll) */}
+      {/* CONTEÚDO PRINCIPAL */}
       <motion.div style={{ marginLeft: contentMargin }} className="w-full">
         
         {/* HERO SECTION */}
