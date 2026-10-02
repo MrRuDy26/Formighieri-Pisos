@@ -79,10 +79,11 @@ export default function Home() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -100, opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-0 left-0 h-screen w-24 lg:w-32 z-50 bg-[#0c0a09] border-r border-white/10 flex flex-col items-center justify-between py-10"
+            // Largura aumentada (w-32 lg:w-40) para acomodar as palavras na horizontal
+            className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09] border-r border-white/10 flex flex-col items-center justify-between py-10"
           >
-            {/* Logo Reduzida no Menu Lateral */}
-            <a href="#" className="relative block w-14 h-14 lg:w-16 lg:h-16 transform -rotate-90 origin-center mt-8">
+            {/* Logo Reduzida no Menu Lateral - AGORA NA HORIZONTAL */}
+            <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2">
                <Image 
                 src="/logo.png" 
                 alt="Formighieri"
@@ -91,11 +92,11 @@ export default function Home() {
               />
             </a>
 
-            {/* Links Verticais */}
-            <div className="flex flex-col items-center space-y-16 lg:space-y-20 flex-grow justify-center mt-12">
-              <a href="#produtos" className="transform -rotate-90 text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition whitespace-nowrap">Produtos</a>
-              <a href="#obras" className="transform -rotate-90 text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition whitespace-nowrap">Obras</a>
-              <a href="#diferenciais" className="transform -rotate-90 text-[11px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-[#cda661] transition whitespace-nowrap">Diferenciais</a>
+            {/* Links Empilhados - AGORA NA HORIZONTAL */}
+            <div className="flex flex-col items-center space-y-10 flex-grow justify-center w-full">
+              <a href="#produtos" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition">Produtos</a>
+              <a href="#diferenciais" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition">Diferenciais</a>
+              <a href="#obras" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-[#cda661] transition">Obras</a>
             </div>
 
             {/* Ícone de Contato */}
@@ -111,8 +112,8 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* CONTEÚDO PRINCIPAL (Ganha margem esquerda quando o menu vertical está ativo) */}
-      <div className={`w-full transition-all duration-700 ease-in-out ${isScrolledPastHero ? 'ml-24 lg:ml-32' : 'ml-0'}`}>
+      {/* CONTEÚDO PRINCIPAL (Ganha margem esquerda adaptada ao novo menu lateral) */}
+      <div className={`w-full transition-all duration-700 ease-in-out ${isScrolledPastHero ? 'ml-32 lg:ml-40' : 'ml-0'}`}>
         
         {/* HERO SECTION COM A LOGO GIGANTE E CENTRALIZADA */}
         <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
