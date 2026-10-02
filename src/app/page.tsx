@@ -48,12 +48,21 @@ export default function Home() {
   const menuX = useTransform(scrollYProgress, [0.03, 0.1], [-30, 0]);
   const contentMargin = useTransform(scrollYProgress, [0.03, 0.1], ["0px", "160px"]);
 
-  // Escala dinâmica do feixe laser
+  // Escala dinâmica do feixe laser lateral
   const scaleDown = useTransform(scrollYProgress, [0, 0.98], [0, 1]);
   const scaleUp = useTransform(scrollYProgress, [0.02, 1], [1, 0]);
   
   const beamScaleY = scrollDir === "down" ? scaleDown : scaleUp;
   const beamOpacity = useTransform(scrollYProgress, [0.01, 0.08, 0.92, 0.99], [0, 1, 1, 0]);
+
+  // Cores dinâmicas para os 7 itens do menu baseadas no progresso do scroll
+  const link1Color = useTransform(scrollYProgress, [0, 0.15], ["rgba(255,255,255,0.7)", "#ffd700"]);
+  const link2Color = useTransform(scrollYProgress, [0.1, 0.3], ["rgba(255,255,255,0.7)", "#ffd700"]);
+  const link3Color = useTransform(scrollYProgress, [0.25, 0.45], ["rgba(255,215,0,0.9)", "#ffd700"]);
+  const link4Color = useTransform(scrollYProgress, [0.4, 0.6], ["rgba(255,255,255,0.7)", "#ffd700"]);
+  const link5Color = useTransform(scrollYProgress, [0.55, 0.75], ["rgba(255,255,255,0.7)", "#ffd700"]);
+  const link6Color = useTransform(scrollYProgress, [0.7, 0.9], ["rgba(255,255,255,0.7)", "#ffd700"]);
+  const link7Color = useTransform(scrollYProgress, [0.85, 1], ["rgba(255,255,255,0.7)", "#ffd700"]);
 
   const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const yHeroText = useTransform(scrollYProgress, [0, 0.5], ["0%", "-50%"]);
@@ -123,15 +132,15 @@ export default function Home() {
           />
         </a>
 
-        {/* Links Completos */}
+        {/* Links com Mudança de Cor Dinâmica ao Longo do Scroll */}
         <div className="flex flex-col items-center space-y-4 flex-grow justify-center w-full my-2">
-          <a href="#produtos" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Produtos</a>
-          <a href="#promocao" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-[#ffd700]/90 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Promoção</a>
-          <a href="#diferenciais" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Diferenciais</a>
-          <a href="#servicos" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Serviços</a>
-          <a href="#obras" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Obras</a>
-          <a href="#blog" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Blog</a>
-          <a href="#contato" className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] text-white/70 hover:text-[#ffd700] hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] transition-all duration-300 font-medium">Contato</a>
+          <motion.a href="#produtos" style={{ color: link1Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Produtos</motion.a>
+          <motion.a href="#promocao" style={{ color: link2Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Promoção</motion.a>
+          <motion.a href="#diferenciais" style={{ color: link3Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Diferenciais</motion.a>
+          <motion.a href="#servicos" style={{ color: link4Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Serviços</motion.a>
+          <motion.a href="#obras" style={{ color: link5Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Obras</motion.a>
+          <motion.a href="#blog" style={{ color: link6Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Blog</motion.a>
+          <motion.a href="#contato" style={{ color: link7Color }} className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] hover:text-[#ffd700] transition-colors duration-300 font-medium">Contato</motion.a>
         </div>
 
         {/* Ícone de Contato WhatsApp */}
@@ -353,20 +362,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Copyright e Assinatura Estratégica */}
-            <div className="w-full border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-white/40 tracking-wider">
-              <p>© 2026 FORMIGHIERI PISOS DE MADEIRA. TODOS OS DIREITOS RESERVADOS.</p>
-              <p className="mt-4 sm:mt-0">
-                ESTRATÉGIA POR{" "}
-                <a 
-                  href="https://mauricio-roberto-rudy.vercel.app/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-[#ffd700] hover:underline font-semibold"
-                >
-                  MAURICIO RUDY
-                </a>
-              </p>
+            {/* Copyright e Assinatura Unificados e Centralizados (Estilo Nagato) */}
+            <div className="w-full border-t border-white/5 pt-8 flex items-center justify-center text-[11px] text-[#ffd700]/70 tracking-wider font-light">
+              <a 
+                href="https://mauricio-roberto-rudy.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-[#ffd700] transition-colors duration-300 text-center"
+              >
+                © 2026 FORMIGHIERI PISOS DE MADEIRA. TODOS OS DIREITOS RESERVADOS | ESTRATÉGIA POR MAURICIO RUDY
+              </a>
             </div>
 
           </div>
