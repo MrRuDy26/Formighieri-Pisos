@@ -56,17 +56,17 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#cda661] selection:text-[#0c0a09]">
       
-{/* NAVBAR IMERSIVA (Sem fundo, flutua sobre a imagem e sobe no scroll) */}
+{/* NAVBAR COMPLETA (O Design Favorito com Mix Blend Difference) */}
       <motion.nav 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute top-0 left-0 w-full z-50 px-6 sm:px-12 py-8 flex items-center justify-between"
+        className="fixed top-0 left-0 w-full z-50 px-6 sm:px-12 py-6 flex items-center justify-between mix-blend-difference"
       >
-        {/* LOGO OFICIAL - TAMANHO IDEAL PRESERVADO */}
-        <a href="#" className="relative block h-12 w-48 md:h-16 md:w-64">
+        {/* LOGO - Dica: Use um arquivo logo.png todo branco para o efeito camaleão ficar perfeito! */}
+        <a href="#" className="relative block h-8 w-40 md:h-10 md:w-56">
           <Image 
-            src="/logo.png" /* Mude para .svg se for vetor */
+            src="/logo.png" 
             alt="Formighieri Pisos de Madeira"
             fill
             style={{ objectFit: "contain", objectPosition: "left" }}
@@ -75,7 +75,7 @@ export default function Home() {
         </a>
         
         {/* Menu Desktop */}
-        <div className="hidden lg:flex items-center space-x-8 text-[10px] uppercase tracking-[0.2em] text-white/90 font-medium drop-shadow-md">
+        <div className="hidden lg:flex items-center space-x-8 text-[10px] uppercase tracking-[0.2em] text-white/70 font-medium">
           <a href="#produtos" className="hover:text-white transition">Produtos</a>
           <a href="#promocao" className="hover:text-[#cda661] transition">Promoção</a>
           <a href="#diferenciais" className="hover:text-white transition">Diferenciais</a>
@@ -87,7 +87,7 @@ export default function Home() {
           href="https://wa.me/5541998050400" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="group flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest text-white hover:text-[#cda661] transition-colors duration-500 drop-shadow-md"
+          className="group flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest text-white hover:text-[#cda661] transition-colors duration-500"
         >
           <span>Contato</span>
           <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
