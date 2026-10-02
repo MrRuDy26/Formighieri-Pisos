@@ -30,8 +30,7 @@ export default function Home() {
   const { scrollY } = useScroll();
   useEffect(() => {
     return scrollY.onChange((latest) => {
-      // Se rolou mais de 80% da altura da tela, ativa o menu lateral
-      if (latest > window.innerHeight * 0.8) {
+      if (latest > window.innerHeight * 0.75) {
         setIsScrolledPastHero(true);
       } else {
         setIsScrolledPastHero(false);
@@ -71,19 +70,21 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-hidden selection:bg-[#cda661] selection:text-[#0c0a09] relative flex">
       
-      {/* MENU LATERAL VERTICAL (Aparece apenas após o Hero) */}
+      {/* MENU LATERAL COM LINHA DE LUZ DOURADA */}
       <AnimatePresence>
         {isScrolledPastHero && (
           <motion.nav 
-            initial={{ x: -100, opacity: 0 }}
+            initial={{ x: -120, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -100, opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            // Largura aumentada (w-32 lg:w-40) para acomodar as palavras na horizontal
-            className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09] border-r border-white/10 flex flex-col items-center justify-between py-10"
+            exit={{ x: -120, opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-0 left-0 h-screen w-32 lg:w-40 z-50 bg-[#0c0a09] flex flex-col items-center justify-between py-10 border-r border-transparent"
+            style={{
+              borderImage: "linear-gradient(to bottom, rgba(205,160,97,0.4), rgba(205,160,97,0.05)) 1"
+            }}
           >
-            {/* Logo Reduzida no Menu Lateral - AGORA NA HORIZONTAL */}
-            <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2">
+            {/* Logo Reduzida */}
+            <a href="#" className="relative block w-20 h-10 lg:w-28 lg:h-12 mt-2 group">
                <Image 
                 src="/logo.png" 
                 alt="Formighieri"
@@ -92,19 +93,19 @@ export default function Home() {
               />
             </a>
 
-            {/* Links Empilhados - AGORA NA HORIZONTAL */}
+            {/* Links com Iluminação (Hover Glow Dourado) */}
             <div className="flex flex-col items-center space-y-10 flex-grow justify-center w-full">
-              <a href="#produtos" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition">Produtos</a>
-              <a href="#diferenciais" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition">Diferenciais</a>
-              <a href="#obras" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-[#cda661] transition">Obras</a>
+              <a href="#produtos" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-[#cda661] hover:scale-105 transition-all duration-300">Produtos</a>
+              <a href="#diferenciais" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-[#cda661] hover:scale-105 transition-all duration-300">Diferenciais</a>
+              <a href="#obras" className="text-[10px] lg:text-xs uppercase tracking-[0.2em] text-white/60 hover:text-[#cda661] hover:scale-105 transition-all duration-300">Obras</a>
             </div>
 
-            {/* Ícone de Contato */}
+            {/* Ícone de Contato com Brilho */}
             <a 
               href="https://wa.me/5541998050400" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#cda661] hover:border-[#cda661] hover:text-[#0c0a09] transition-all duration-300"
+              className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#cda661] hover:border-[#cda661] hover:text-[#0c0a09] hover:shadow-[0_0_20px_rgba(205,160,97,0.4)] transition-all duration-300"
             >
               <Mail className="w-4 h-4" />
             </a>
@@ -112,10 +113,10 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* CONTEÚDO PRINCIPAL (Ganha margem esquerda adaptada ao novo menu lateral) */}
-      <div className={`w-full transition-all duration-700 ease-in-out ${isScrolledPastHero ? 'ml-32 lg:ml-40' : 'ml-0'}`}>
+      {/* CONTEÚDO PRINCIPAL */}
+      <div className={`w-full transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] ${isScrolledPastHero ? 'ml-32 lg:ml-40' : 'ml-0'}`}>
         
-        {/* HERO SECTION COM A LOGO GIGANTE E CENTRALIZADA */}
+        {/* HERO SECTION */}
         <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
           <motion.div 
             className="absolute inset-0 w-full h-[120%] bg-cover bg-center"
@@ -130,7 +131,6 @@ export default function Home() {
             style={{ y: yHeroText, opacity: opacityHero }}
             className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-5xl"
           >
-            {/* Logo Gigante no Centro */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -183,7 +183,7 @@ export default function Home() {
                     <div className="w-full lg:w-1/2 mt-2 lg:mt-0">
                       <ul className="flex flex-col gap-4">
                         {cat.items.map((item, i) => (
-                          <li key={i} className="text-white/70 text-sm lg:text-base font-light tracking-wide hover:text-white transition-colors flex items-center gap-3 cursor-pointer">
+                          <li key={i} className="text-white/70 text-sm lg:text-base font-light tracking-wide hover:text-[#cda661] transition-colors duration-300 flex items-center gap-3 cursor-pointer">
                             <span className="w-1.5 h-1.5 bg-[#cda661] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             {item}
                           </li>
@@ -220,18 +220,18 @@ export default function Home() {
         {/* DIFERENCIAIS DA MARCA */}
         <section id="diferenciais" className="py-24 px-8 sm:px-16 max-w-[1400px] mx-auto border-t border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
-            <div className="space-y-6">
-              <Compass className="w-10 h-10 text-[#cda661]" />
+            <div className="space-y-6 group">
+              <Compass className="w-10 h-10 text-[#cda661] group-hover:scale-110 transition-transform duration-300" />
               <h3 className="font-serif text-3xl text-white">Consultoria Técnica</h3>
               <p className="text-white/60 text-base font-light leading-relaxed">Suporte especializado para escritórios de arquitetura, desde a paginação até a entrega final.</p>
             </div>
-            <div className="space-y-6">
-              <ShieldCheck className="w-10 h-10 text-[#cda661]" />
+            <div className="space-y-6 group">
+              <ShieldCheck className="w-10 h-10 text-[#cda661] group-hover:scale-110 transition-transform duration-300" />
               <h3 className="font-serif text-3xl text-white">Mão de Obra Própria</h3>
               <p className="text-white/60 text-base font-light leading-relaxed">Instalação e revitalização feitas por uma equipe própria com maquinário de alta precisão.</p>
             </div>
-            <div className="space-y-6">
-              <Award className="w-10 h-10 text-[#cda661]" />
+            <div className="space-y-6 group">
+              <Award className="w-10 h-10 text-[#cda661] group-hover:scale-110 transition-transform duration-300" />
               <h3 className="font-serif text-3xl text-white">Garantia Histórica</h3>
               <p className="text-white/60 text-base font-light leading-relaxed">A segurança de uma empresa com sete décadas de tradição operando na capital paranaense.</p>
             </div>
@@ -251,13 +251,13 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 1 }}
-              className="md:col-span-7 relative rounded-sm overflow-hidden group"
+              className="md:col-span-7 relative rounded-sm overflow-hidden group cursor-pointer"
             >
               <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop')" }} />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-700" />
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700" />
               <div className="absolute bottom-10 left-10">
                 <p className="text-[#cda661] text-xs uppercase tracking-[0.2em] font-medium mb-2">Residência CM</p>
-                <h4 className="font-serif text-3xl text-white">Carvalho Pátina Branca</h4>
+                <h4 className="font-serif text-3xl text-white group-hover:text-[#cda661] transition-colors duration-300">Carvalho Pátina Branca</h4>
               </div>
             </motion.div>
 
@@ -266,13 +266,13 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="md:col-span-5 relative rounded-sm overflow-hidden group"
+              className="md:col-span-5 relative rounded-sm overflow-hidden group cursor-pointer"
             >
               <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800&auto=format&fit=crop')" }} />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-700" />
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700" />
               <div className="absolute bottom-10 left-10">
                 <p className="text-[#cda661] text-xs uppercase tracking-[0.2em] font-medium mb-2">Residência RF</p>
-                <h4 className="font-serif text-3xl text-white">Reale Carvalho</h4>
+                <h4 className="font-serif text-3xl text-white group-hover:text-[#cda661] transition-colors duration-300">Reale Carvalho</h4>
               </div>
             </motion.div>
           </div>
