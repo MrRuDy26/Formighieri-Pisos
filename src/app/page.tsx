@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, Mail, Compass, ShieldCheck, Award, Phone, MapPin, Facebook, Youtube, Instagram, MessageCircle, Menu, X } from "lucide-react";
+import { ArrowRight, Mail, Compass, ShieldCheck, Award, Phone, MapPin, Facebook, Youtube, Instagram, MessageCircle, Menu, X, Home as HomeIcon, Layers, Briefcase, PhoneCall } from "lucide-react";
 import Lenis from '@studio-freight/lenis';
 
 export default function Home() {
@@ -56,7 +56,7 @@ export default function Home() {
   const beamScaleY = scrollDir === "down" ? scaleDown : scaleUp;
   const beamOpacity = useTransform(scrollYProgress, [0.01, 0.08, 0.92, 0.99], [0, 1, 1, 0]);
 
-  // Cores dinâmicas para os itens do menu
+  // Cores dinâmicas para os itens do menu desktop
   const link1Color = useTransform(scrollYProgress, [0, 0.15], ["rgba(255,255,255,0.7)", "#ffd700"]);
   const link2Color = useTransform(scrollYProgress, [0.1, 0.3], ["rgba(255,255,255,0.7)", "#ffd700"]);
   const link3Color = useTransform(scrollYProgress, [0.25, 0.45], ["rgba(255,215,0,0.9)", "#ffd700"]);
@@ -95,48 +95,88 @@ export default function Home() {
   return (
     <main className="bg-[#0c0a09] text-[#EAE6DF] font-sans overflow-x-hidden selection:bg-[#ffd700] selection:text-[#0c0a09] relative flex flex-col lg:flex-row">
       
-      {/* BOTÃO FLUTUANTE WHATSAPP FIXO */}
-      <a 
-        href="https://wa.me/5541998050400" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.5)] hover:scale-110 transition-all duration-300"
-        aria-label="WhatsApp"
-      >
-        <MessageCircle className="w-7 h-7 fill-white" />
-      </a>
-
-      {/* HEADER MOBILE (Aparece apenas em telas pequenas) */}
-      <div className="lg:hidden fixed top-0 left-0 w-full h-16 bg-[#0c0a09]/95 backdrop-blur-md z-50 px-6 flex items-center justify-between border-b border-white/10">
+      {/* HEADER MOBILE SUPERIOR LIMPO (Apenas Logo) */}
+      <div className="lg:hidden fixed top-0 left-0 w-full h-16 bg-[#0c0a09]/80 backdrop-blur-md z-40 px-6 flex items-center justify-between border-b border-white/5">
         <a href="#" className="relative block w-24 h-8">
           <Image src="/logo.png" alt="Formighieri" fill style={{ objectFit: "contain" }} />
         </a>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-[#ffd700]/80 font-medium">75 Anos</span>
+      </div>
+
+      {/* BARRA INFERIOR FLUTUANTE MOBILE (Glassmorphism para o Polegar) */}
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#161210]/90 backdrop-blur-xl border border-white/10 rounded-full py-3 px-6 flex items-center justify-between shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+        <a href="#" className="flex flex-col items-center text-white/70 hover:text-[#ffd700] transition-colors">
+          <HomeIcon className="w-5 h-5" />
+          <span className="text-[9px] uppercase tracking-wider mt-1">Início</span>
+        </a>
+        <a href="#produtos" className="flex flex-col items-center text-white/70 hover:text-[#ffd700] transition-colors">
+          <Layers className="w-5 h-5" />
+          <span className="text-[9px] uppercase tracking-wider mt-1">Produtos</span>
+        </a>
+        <a href="#obras" className="flex flex-col items-center text-white/70 hover:text-[#ffd700] transition-colors">
+          <Briefcase className="w-5 h-5" />
+          <span className="text-[9px] uppercase tracking-wider mt-1">Obras</span>
+        </a>
+        <a href="https://wa.me/5541998050400" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center text-white/70 hover:text-[#ffd700] transition-colors">
+          <MessageCircle className="w-5 h-5 text-[#25D366]" />
+          <span className="text-[9px] uppercase tracking-wider mt-1">Contato</span>
+        </a>
         <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-white focus:outline-none p-2"
-          aria-label="Menu"
+          onClick={() => setMobileMenuOpen(true)}
+          className="flex flex-col items-center text-[#ffd700] focus:outline-none"
         >
-          {mobileMenuOpen ? <X className="w-6 h-6 text-[#ffd700]" /> : <Menu className="w-6 h-6 text-white" />}
+          <Menu className="w-5 h-5" />
+          <span className="text-[9px] uppercase tracking-wider mt-1">Menu</span>
         </button>
       </div>
 
-      {/* MENU MOBILE EXPANSÍVEL */}
+      {/* MENU LATERAL DESLIZANTE MOBILE (Drawer Cinemático com Laser) */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden fixed inset-0 top-16 z-40 bg-[#0c0a09]/98 backdrop-blur-xl flex flex-col items-center justify-center space-y-6 p-8"
-          >
-            <a href="#produtos" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-white/80 hover:text-[#ffd700]">Produtos</a>
-            <a href="#promocao" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-[#ffd700]">Promoção</a>
-            <a href="#diferenciais" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-white/80 hover:text-[#ffd700]">Diferenciais</a>
-            <a href="#servicos" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-white/80 hover:text-[#ffd700]">Serviços</a>
-            <a href="#obras" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-white/80 hover:text-[#ffd700]">Obras</a>
-            <a href="#blog" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-white/80 hover:text-[#ffd700]">Blog</a>
-            <a href="#contato" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-[0.2em] text-white/80 hover:text-[#ffd700]">Contato</a>
-          </motion.div>
+          <>
+            {/* Backdrop escuro */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+            />
+            {/* Gaveta lateral */}
+            <motion.div 
+              initial={{ x: "-100%" }}
+              animate={{ x: "0%" }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-[#0c0a09] border-r border-white/10 flex flex-col justify-between py-10 px-8 shadow-2xl"
+            >
+              {/* Feixe laser lateral na gaveta */}
+              <div className="absolute top-0 right-0 w-[2px] h-full bg-gradient-to-b from-[#ffd700] via-[#f3ba4f] to-[#ffd700] shadow-[0_0_15px_#ffd700]" />
+
+              <div className="flex items-center justify-between mb-8">
+                <div className="relative w-28 h-10">
+                  <Image src="/logo.png" alt="Formighieri" fill style={{ objectFit: "contain" }} />
+                </div>
+                <button onClick={() => setMobileMenuOpen(false)} className="text-white/70 hover:text-white p-2">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="flex flex-col space-y-6 my-auto">
+                <a href="#produtos" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-white/80 hover:text-[#ffd700] transition-colors">Produtos</a>
+                <a href="#promocao" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-[#ffd700] font-semibold">Promoção</a>
+                <a href="#diferenciais" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-white/80 hover:text-[#ffd700] transition-colors">Diferenciais</a>
+                <a href="#servicos" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-white/80 hover:text-[#ffd700] transition-colors">Serviços</a>
+                <a href="#obras" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-white/80 hover:text-[#ffd700] transition-colors">Obras</a>
+                <a href="#blog" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-white/80 hover:text-[#ffd700] transition-colors">Blog</a>
+                <a href="#contato" onClick={() => setMobileMenuOpen(false)} className="text-xs uppercase tracking-[0.3em] text-white/80 hover:text-[#ffd700] transition-colors">Contato</a>
+              </div>
+
+              <div className="text-[10px] text-white/40 tracking-widest uppercase">
+                Formighieri • Curitiba PR
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
@@ -187,7 +227,7 @@ export default function Home() {
       {/* CONTEÚDO PRINCIPAL */}
       <motion.div 
         style={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? contentMargin : "0px" }} 
-        className="w-full mt-16 lg:mt-0"
+        className="w-full mt-16 lg:mt-0 pb-20 lg:pb-0"
       >
         
         {/* HERO SECTION */}
@@ -270,7 +310,6 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Imagem do Catálogo (Oculta no mobile pequeno, visível no desktop) */}
             <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[75vh] w-full rounded-sm overflow-hidden bg-[#110f0e] shadow-2xl border border-white/5">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -370,7 +409,7 @@ export default function Home() {
           </a>
 
           {/* RODAPÉ DETALHADO */}
-          <div className="w-full max-w-6xl border-t border-white/10 pt-12 sm:pt-16 pb-8 flex flex-col items-center space-y-8">
+          <div className="w-full max-w-6xl border-t border-white/10 pt-12 sm:pt-16 pb-16 lg:pb-8 flex flex-col items-center space-y-8">
             
             {/* Redes Sociais */}
             <div className="flex items-center space-x-6">
@@ -397,7 +436,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Copyright e Assinatura Unificados e Centralizados (Estilo Nagato) */}
+            {/* Copyright e Assinatura */}
             <div className="w-full border-t border-white/5 pt-8 flex items-center justify-center text-[10px] sm:text-[11px] text-[#ffd700]/70 tracking-wider font-light px-4 text-center">
               <a 
                 href="https://mauricio-roberto-rudy.vercel.app/" 
